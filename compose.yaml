@@ -1,12 +1,24 @@
 ﻿services:
-  order_processing_service:
-    image: order_processing_service
+  order_processing_web_api:
+    image: order_processing_web_api
     build:
       context: .
-      dockerfile: OrderProcessingService/Dockerfile
+      dockerfile: OPS.WebApi/Dockerfile
     ports:
-      - "8080:80"
-      - "8081:81"
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - rabbitmq
+  
+  order_processing_service_processor:
+    image: order_processing_service_processor
+    build:
+      context: .
+      dockerfile: OPS.Processor/Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      - rabbitmq
 
   postgres:
     image: postgres:16
@@ -20,6 +32,17 @@
       - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
+  
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq-local
+    restart: unless-stopped
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: appuser
+      RABBITMQ_DEFAULT_PASS: appsecret
 
 volumes:
   pg_data:

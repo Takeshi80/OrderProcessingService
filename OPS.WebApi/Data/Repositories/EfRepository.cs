@@ -1,9 +1,8 @@
-﻿using OrderProcessingService.Data.Interface;
-
-namespace OrderProcessingService.Data.Repositories;
-
+﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
+using OPS.WebApi.Data.Interface;
+
+namespace OPS.WebApi.Data.Repositories;
 
 public class EfRepository<T>(AppDbContext dbContext) : IRepository<T>
     where T : class, IEntity

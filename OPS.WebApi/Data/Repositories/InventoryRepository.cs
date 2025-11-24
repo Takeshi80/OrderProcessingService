@@ -1,6 +1,6 @@
-﻿using OrderProcessingService.Data.Models;
+﻿using OPS.WebApi.Data.Models;
 
-namespace OrderProcessingService.Data.Repositories;
+namespace OPS.WebApi.Data.Repositories;
 
 public interface IInventoryRepository
 {

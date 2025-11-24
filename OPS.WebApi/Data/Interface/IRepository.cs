@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace OrderProcessingService.Data.Interface;
+namespace OPS.WebApi.Data.Interface;
 
 public interface IRepository<T> where T : IEntity
 {

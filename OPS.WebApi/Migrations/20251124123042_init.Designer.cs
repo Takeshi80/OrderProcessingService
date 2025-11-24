@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using OrderProcessingService.Data;
+using OPS.WebApi.Data;
 
 #nullable disable
 
@@ -24,7 +24,7 @@ namespace OrderProcessingService.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("OrderProcessingService.Data.Models.Customer", b =>
+            modelBuilder.Entity("OPS.WebApi.Data.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,7 +45,7 @@ namespace OrderProcessingService.Migrations
                     b.ToTable("OrderStatus");
                 });
 
-            modelBuilder.Entity("OrderProcessingService.Data.Models.Inventory", b =>
+            modelBuilder.Entity("OPS.WebApi.Data.Models.Inventory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -66,7 +66,7 @@ namespace OrderProcessingService.Migrations
                     b.ToTable("Inventories");
                 });
 
-            modelBuilder.Entity("OrderProcessingService.Data.Models.Item", b =>
+            modelBuilder.Entity("OPS.WebApi.Data.Models.Item", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,7 +83,7 @@ namespace OrderProcessingService.Migrations
                     b.ToTable("Items");
                 });
 
-            modelBuilder.Entity("OrderProcessingService.Data.Models.Order", b =>
+            modelBuilder.Entity("OPS.WebApi.Data.Models.Order", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -107,7 +107,7 @@ namespace OrderProcessingService.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("OrderProcessingService.Data.Models.OrderItem", b =>
+            modelBuilder.Entity("OPS.WebApi.Data.Models.OrderItem", b =>
                 {
                     b.Property<int>("OrderId")
                         .HasColumnType("integer");
@@ -125,9 +125,9 @@ namespace OrderProcessingService.Migrations
                     b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("OrderProcessingService.Data.Models.Inventory", b =>
+            modelBuilder.Entity("OPS.WebApi.Data.Models.Inventory", b =>
                 {
-                    b.HasOne("OrderProcessingService.Data.Models.Item", "Item")
+                    b.HasOne("OPS.WebApi.Data.Models.Item", "Item")
                         .WithMany()
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -136,9 +136,9 @@ namespace OrderProcessingService.Migrations
                     b.Navigation("Item");
                 });
 
-            modelBuilder.Entity("OrderProcessingService.Data.Models.Order", b =>
+            modelBuilder.Entity("OPS.WebApi.Data.Models.Order", b =>
                 {
-                    b.HasOne("OrderProcessingService.Data.Models.Customer", "Customer")
+                    b.HasOne("OPS.WebApi.Data.Models.Customer", "Customer")
                         .WithMany("Orders")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -147,15 +147,15 @@ namespace OrderProcessingService.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("OrderProcessingService.Data.Models.OrderItem", b =>
+            modelBuilder.Entity("OPS.WebApi.Data.Models.OrderItem", b =>
                 {
-                    b.HasOne("OrderProcessingService.Data.Models.Item", "Item")
+                    b.HasOne("OPS.WebApi.Data.Models.Item", "Item")
                         .WithMany("OrderItems")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OrderProcessingService.Data.Models.Order", "Order")
+                    b.HasOne("OPS.WebApi.Data.Models.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -166,17 +166,17 @@ namespace OrderProcessingService.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("OrderProcessingService.Data.Models.Customer", b =>
+            modelBuilder.Entity("OPS.WebApi.Data.Models.Customer", b =>
                 {
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("OrderProcessingService.Data.Models.Item", b =>
+            modelBuilder.Entity("OPS.WebApi.Data.Models.Item", b =>
                 {
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("OrderProcessingService.Data.Models.Order", b =>
+            modelBuilder.Entity("OPS.WebApi.Data.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
                 });

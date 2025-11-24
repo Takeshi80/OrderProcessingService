@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using OrderProcessingService.Data.Interface;
+using OPS.WebApi.Data.Interface;
 
-namespace OrderProcessingService.Data.Models;
+namespace OPS.WebApi.Data.Models;
 
 public class Item: IEntity
 {

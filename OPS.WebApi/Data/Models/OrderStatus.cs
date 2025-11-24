@@ -1,4 +1,4 @@
-﻿namespace OrderProcessingService.Data.Models;
+﻿namespace OPS.WebApi.Data.Models;
 
 public enum OrderStatus
 {
