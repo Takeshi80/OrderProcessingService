@@ -1,0 +1,25 @@
+﻿services:
+  order_processing_service:
+    image: order_processing_service
+    build:
+      context: .
+      dockerfile: OrderProcessingService/Dockerfile
+    ports:
+      - "8080:80"
+      - "8081:81"
+
+  postgres:
+    image: postgres:16
+    container_name: postgres-local
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: appsecret
+      POSTGRES_DB: order_processing_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  pg_data:
