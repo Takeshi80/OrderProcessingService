@@ -1,8 +1,8 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using OPS.WebApi.Data.Interface;
+using OPS.Data.Interface;
 
-namespace OPS.WebApi.Data.Repositories;
+namespace OPS.Data.Repositories;
 
 public class EfRepository<T>(AppDbContext dbContext) : IRepository<T>
     where T : class, IEntity

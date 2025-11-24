@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OPS.WebApi.Data.Models;
+using OPS.Data.Models;
 
-namespace OPS.WebApi.Data;
+namespace OPS.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {

@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OPS.Data;
 
 namespace OPS.Processor;
 
@@ -9,6 +11,8 @@ public static class Program
     {
         var builder = Host.CreateApplicationBuilder(args);
 
+        builder.Services.AddOpsDpContext(builder.Configuration);
+
         builder.Logging.ClearProviders();
         builder.Logging.AddSimpleConsole(options =>
         {
@@ -16,7 +20,7 @@ public static class Program
             options.TimestampFormat = "HH:mm:ss ";
         });
 
-        var endpointConfiguration = GetEndpointConfiguration();
+        var endpointConfiguration = GetEndpointConfiguration(builder);
 
         builder.UseNServiceBus(endpointConfiguration);
 
@@ -24,13 +28,14 @@ public static class Program
         await host.RunAsync();
     }
 
-    private static EndpointConfiguration GetEndpointConfiguration()
+    private static EndpointConfiguration GetEndpointConfiguration(HostApplicationBuilder builder)
     {
+        var connectionString = builder.Configuration.GetConnectionString("RabbitMq");
         var endpointConfiguration = new EndpointConfiguration("Order.Processor");
-
+        
         var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
         Console.WriteLine("Connecting to RabbitMQ...");
-        transport.ConnectionString("host=rabbitmq;username=appuser;password=appsecret");
+        transport.ConnectionString(connectionString);
         transport.UseConventionalRoutingTopology(QueueType.Classic);
 
         endpointConfiguration.SendFailedMessagesTo("order.processor.error");

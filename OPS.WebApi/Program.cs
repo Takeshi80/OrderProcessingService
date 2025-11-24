@@ -1,8 +1,5 @@
-using Microsoft.EntityFrameworkCore;
+using OPS.Data;
 using OPS.WebApi;
-using OPS.WebApi.Data;
-using OPS.WebApi.Data.Interface;
-using OPS.WebApi.Data.Repositories;
 using OPS.WebApi.Dtos;
 using OPS.WebApi.RabbitMq;
 
@@ -13,13 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+// register dependencies for DB
+builder.Services.AddOpsDpContext(builder.Configuration);
 
+builder.Services.Configure<ConnectionStringsOptions>(builder.Configuration.GetSection("ConnectionStrings"));
 
-builder.Services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-
-builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IRabbitMqSender, RabbitMqSender>();
 
 var app = builder.Build();

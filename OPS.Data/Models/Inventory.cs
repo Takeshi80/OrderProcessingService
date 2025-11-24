@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using OPS.WebApi.Data.Interface;
+using OPS.Data.Interface;
 
-namespace OPS.WebApi.Data.Models;
+namespace OPS.Data.Models;
 
 public class Inventory : IEntity
 {

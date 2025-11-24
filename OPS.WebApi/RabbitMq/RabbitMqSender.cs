@@ -1,4 +1,5 @@
-﻿using OPS.Messages;
+﻿using Microsoft.Extensions.Options;
+using OPS.Messages;
 using Endpoint = NServiceBus.Endpoint;
 
 namespace OPS.WebApi.RabbitMq;
@@ -8,14 +9,16 @@ public interface IRabbitMqSender
     Task Send();
 }
 
-public class RabbitMqSender: IRabbitMqSender
+public class RabbitMqSender(IOptions<ConnectionStringsOptions> connectionStrings): IRabbitMqSender
 {
+    private readonly string _defaultConnection = connectionStrings.Value.RabbitMq;
+    
     public async Task Send()
     {
         var endpointConfiguration = new EndpointConfiguration("Order.Sender");
 
         var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
-        transport.ConnectionString("host=rabbitmq;username=appuser;password=appsecret");
+        transport.ConnectionString(_defaultConnection);
         transport.UseConventionalRoutingTopology(QueueType.Classic);
 
         // Routing: send SubmitOrder commands to Order.Processor
@@ -39,8 +42,8 @@ public class RabbitMqSender: IRabbitMqSender
             CustomerId = customerId,
             Items =
             {
-                new OrderItem() { ItemId = 1, Quantity = 2 },
-                new OrderItem() { ItemId = 2, Quantity = 1 }
+                new OrderItem { ItemId = 1, Quantity = 2 },
+                new OrderItem { ItemId = 2, Quantity = 1 }
             }
         };
 

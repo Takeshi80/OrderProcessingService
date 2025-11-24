@@ -1,6 +1,6 @@
-﻿using OPS.WebApi.Data.Models;
+﻿using OPS.Data.Models;
 
-namespace OPS.WebApi.Data.Repositories;
+namespace OPS.Data.Repositories;
 
 public interface IInventoryRepository
 {
