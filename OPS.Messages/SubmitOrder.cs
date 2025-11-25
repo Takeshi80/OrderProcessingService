@@ -2,7 +2,7 @@
 
 public class SubmitOrder : ICommand
 {
-    public int OrderId { get; set; }
+    public Guid OrderId { get; set; }
     public int CustomerId { get; set; }
     public List<OrderItem> Items { get; set; } = new();
 }

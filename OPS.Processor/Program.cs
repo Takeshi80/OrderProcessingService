@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OPS.Data;
+using OPS.Processor.Services;
 
 namespace OPS.Processor;
 
@@ -24,6 +26,8 @@ public static class Program
 
         builder.UseNServiceBus(endpointConfiguration);
 
+        builder.Services.AddScoped<IOrderProcessingService, OrderProcessingService>();
+
         var host = builder.Build();
         await host.RunAsync();
     }
@@ -32,7 +36,7 @@ public static class Program
     {
         var connectionString = builder.Configuration.GetConnectionString("RabbitMq");
         var endpointConfiguration = new EndpointConfiguration("Order.Processor");
-        
+
         var transport = endpointConfiguration.UseTransport<RabbitMQTransport>();
         Console.WriteLine("Connecting to RabbitMQ...");
         transport.ConnectionString(connectionString);

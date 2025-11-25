@@ -9,11 +9,34 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Item> Items => Set<Item>();
     public DbSet<Inventory> Inventories => Set<Inventory>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
-    public DbSet<Customer> OrderStatus => Set<Customer>();
+    public DbSet<Customer> Customers => Set<Customer>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Customer>()
+            .HasMany(c => c.Orders);
+
+        modelBuilder.Entity<Inventory>()
+            .HasOne(x => x.Item);
+
+        modelBuilder.Entity<Item>()
+            .HasMany(x => x.OrderItems);
+
+        modelBuilder.Entity<Order>()
+            .Property(o => o.Id)
+            .HasDefaultValueSql("gen_random_uuid()");
+        
+        modelBuilder.Entity<Order>()
+            .HasOne(o => o.Customer)
+            .WithMany(c => c.Orders)
+            .HasForeignKey(o => o.CustomerId);
+
+        modelBuilder.Entity<Order>()
+            .HasMany(o => o.OrderItems)
+            .WithOne(oi => oi.Order)
+            .HasForeignKey(oi => oi.OrderId);
 
         modelBuilder.Entity<OrderItem>()
             .HasKey(o => new { o.OrderId, o.ItemId });
@@ -27,10 +50,5 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasOne(oi => oi.Item)
             .WithMany(i => i.OrderItems)
             .HasForeignKey(oi => oi.ItemId);
-
-        modelBuilder.Entity<Order>()
-            .HasOne(o => o.Customer)
-            .WithMany(c => c.Orders)
-            .HasForeignKey(o => o.CustomerId);
     }
 }

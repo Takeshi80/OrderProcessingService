@@ -9,11 +9,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="NServiceBus" Version="9.2.3"/>
-        <PackageReference Include="NServiceBus.RabbitMQ" Version="9.0.0"/>
+        <PackageReference Include="NServiceBus" Version="9.2.7" />
+        <PackageReference Include="NServiceBus.RabbitMQ" Version="10.1.4" />
         <PackageReference Include="NServiceBus.Extensions.Hosting" Version="3.0.1"/>
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.1"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -29,6 +29,10 @@
             <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+        </Content>
+        <None Remove="appsettings.json" />
+        <Content Include="appsettings.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
 

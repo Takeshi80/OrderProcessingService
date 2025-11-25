@@ -1,19 +1,22 @@
 ﻿using Microsoft.Extensions.Options;
 using OPS.Messages;
+using OPS.Shared;
 using Endpoint = NServiceBus.Endpoint;
 
 namespace OPS.WebApi.RabbitMq;
 
 public interface IRabbitMqSender
 {
-    Task Send();
+    Task<Guid> Send(ProcessOrderRequestDto data);
 }
 
-public class RabbitMqSender(IOptions<ConnectionStringsOptions> connectionStrings): IRabbitMqSender
+public class RabbitMqSender(
+    IOptions<ConnectionStringsOptions> connectionStrings,
+    ILogger<RabbitMqSender> logger) : IRabbitMqSender
 {
     private readonly string _defaultConnection = connectionStrings.Value.RabbitMq;
-    
-    public async Task Send()
+
+    public async Task<Guid> Send(ProcessOrderRequestDto data)
     {
         var endpointConfiguration = new EndpointConfiguration("Order.Sender");
 
@@ -31,25 +34,26 @@ public class RabbitMqSender(IOptions<ConnectionStringsOptions> connectionStrings
         endpointConfiguration.UseSerialization<SystemJsonSerializer>();
 
         var endpointInstance = await Endpoint.Start(endpointConfiguration);
-        Console.WriteLine("Order.Sender endpoint started.");
+        logger.LogInformation("Order.Sender endpoint started.");
 
-        var orderId = 1;
-        var customerId = 2;
+        var orderId = Guid.NewGuid();
 
         var command = new SubmitOrder
         {
             OrderId = orderId,
-            CustomerId = customerId,
-            Items =
+            CustomerId = data.CustomerId,
+            Items = data.Items.Select(x => new OrderItem()
             {
-                new OrderItem { ItemId = 1, Quantity = 2 },
-                new OrderItem { ItemId = 2, Quantity = 1 }
-            }
+                ItemId = x.ItemId,
+                Quantity = x.Quantity
+            }).ToList()
         };
 
-        Console.WriteLine($"Sending SubmitOrder {orderId}...");
+        logger.LogInformation($"Sending SubmitOrder {orderId}...");
         await endpointInstance.Send(command);
 
         await endpointInstance.Stop();
+
+        return orderId;
     }
 }

@@ -1,15 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using OPS.Data.Interface;
 
 namespace OPS.Data.Models;
 
 public class Order : IEntity
 {
-    [Key] public int Id { get; set; }
+    [Key] public Guid Id { get; set; }
 
-    [ForeignKey(nameof(Customer))] public int CustomerId { get; set; }
-    public Customer Customer { get; set; }
+    public int CustomerId { get; set; }
+    public Customer Customer { get; set; } = null!;
 
     public int TotalAmount { get; set; }
 
