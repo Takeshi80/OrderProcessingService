@@ -20,5 +20,6 @@ public static class StartupExtensions
         services.AddScoped<IInventoryRepository, InventoryRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddScoped<IItemRepository, ItemRepository>();
     }
 }

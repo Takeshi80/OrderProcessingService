@@ -22,6 +22,7 @@ public class SubmitOrderHandler(
 
         await orderProcessingService.ProcessOrderAsync(new ProcessOrderRequestDto
         {
+            OrderId = message.OrderId,
             CustomerId = message.CustomerId,
             Items = message.Items.Select(x => new ProcessOrderItemDto
             {

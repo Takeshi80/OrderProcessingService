@@ -1,4 +1,5 @@
 using OPS.Data;
+using OPS.Data.Repositories;
 using OPS.Shared;
 using OPS.WebApi;
 using OPS.WebApi.RabbitMq;
@@ -42,5 +43,14 @@ app.MapPost("/order", async (ProcessOrderRequestDto data, IRabbitMqSender sender
     })
     .WithName("SubmitOrder")
     .WithOpenApi();
+
+app.MapGet("/order/{orderId}", async (Guid orderId, IOrderRepository orderRepository) =>
+{
+    var order = await orderRepository.GetById(orderId);
+
+    return order == null
+        ? Results.NotFound()
+        : Results.Ok(order);
+});
 
 app.Run();
