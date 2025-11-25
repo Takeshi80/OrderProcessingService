@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using OPS.Data;
 using OPS.Messages;
 using OPS.Processor.Services;
-using OPS.Shared;
 
 namespace OPS.Processor.Handlers;
 
@@ -20,11 +20,11 @@ public class SubmitOrderHandler(
             throw new InvalidOperationException("Order must contain at least one item.");
         }
 
-        await orderProcessingService.ProcessOrderAsync(new ProcessOrderRequestDto
+        await orderProcessingService.ProcessOrderAsync(new OrderDto
         {
             OrderId = message.OrderId,
             CustomerId = message.CustomerId,
-            Items = message.Items.Select(x => new ProcessOrderItemDto
+            Items = message.Items.Select(x => new OrderItemDto
             {
                 ItemId = x.ItemId,
                 Quantity = x.Quantity

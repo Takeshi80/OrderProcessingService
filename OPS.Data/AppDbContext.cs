@@ -10,6 +10,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Inventory> Inventories => Set<Inventory>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
     public DbSet<Customer> Customers => Set<Customer>();
+    public DbSet<IdempotentRequest> IdempotentRequests => Set<IdempotentRequest>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -50,5 +51,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasOne(oi => oi.Item)
             .WithMany(i => i.OrderItems)
             .HasForeignKey(oi => oi.ItemId);
+        
+        modelBuilder.Entity<IdempotentRequest>()
+            .HasIndex(x => new { x.ClientId, x.IdempotencyKey })
+            .IsUnique();
     }
 }

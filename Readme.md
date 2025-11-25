@@ -39,7 +39,11 @@ but we will not touch the inventory if it is not fulfillable
 6. There is a retry mechanism for failed messages, but no implementation for DLQ that can be useful 
 in a production version of the app
 7. There's a log of total success message processed
-
+8. There's an idempotency check on API layer which is making sure that we won't 
+execute the same operation twice, but with existing approach we will generate a new order ID GUID once
+the idempotency check pass, this migth be a tricky with updating/cancelling orders and also
+with this approach we cannot implement additional check on the rabbitmq layer. This can be reversal, if we pass 
+order id as guid and make sure that it's unique during initial check on the rabbitmq layer.
 
 ## Assumptions that I've made during this work
 

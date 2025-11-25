@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OPS.Data.Models;
-using OPS.Shared;
 
 namespace OPS.Data.Repositories;
 
 public interface IInventoryRepository
 {
-    Task EnsureInventoryAsync(List<ProcessOrderItemDto> orderItems);
+    Task EnsureInventoryAsync(List<OrderItemDto> orderItems);
 }
 
 public class InventoryRepository(
@@ -15,7 +14,7 @@ public class InventoryRepository(
     ILogger<InventoryRepository> logger)
     : EfRepository<Inventory>(dbContext), IInventoryRepository
 {
-    public async Task EnsureInventoryAsync(List<ProcessOrderItemDto> orderItems)
+    public async Task EnsureInventoryAsync(List<OrderItemDto> orderItems)
     {
         await using var tx = await DbContext.Database.BeginTransactionAsync();
         

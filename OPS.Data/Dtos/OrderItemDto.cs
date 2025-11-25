@@ -1,14 +1,15 @@
-﻿namespace OPS.Shared;
+﻿namespace OPS.Data;
 
-public record ProcessOrderRequestDto
+public record OrderDto
 {
     public Guid OrderId { get; set; }
     public int CustomerId { get; set; }
-    public List<ProcessOrderItemDto> Items { get; set; } = new();
+    public List<OrderItemDto> Items { get; set; } = new();
+    
     public int TotalAmount => Items.Sum(x => x.Quantity);
 }
 
-public record ProcessOrderItemDto
+public record OrderItemDto
 {
     public int ItemId { get; set; }
     public int Quantity { get; set; }

@@ -10,6 +10,10 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.22" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="NServiceBus" Version="9.2.7" />
         <PackageReference Include="NServiceBus.RabbitMQ" Version="10.1.4" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
@@ -25,7 +29,6 @@
     <ItemGroup>
       <ProjectReference Include="..\OPS.Data\OPS.Data.csproj" />
       <ProjectReference Include="..\OPS.Messages\OPS.Messages.csproj" />
-      <ProjectReference Include="..\OPS.Shared\OPS.Shared.csproj" />
     </ItemGroup>
 
 </Project>

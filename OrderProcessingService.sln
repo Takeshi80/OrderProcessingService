@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OPS.Processor", "OPS.Proces
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OPS.Data", "OPS.Data\OPS.Data.csproj", "{0BCA3E2C-3DA4-49AE-A28C-93E04BD579DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OPS.Shared", "OPS.Shared\OPS.Shared.csproj", "{F1D339EC-236F-4CF6-AD13-0AD5BAFD8D04}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,9 +35,5 @@ Global
 		{0BCA3E2C-3DA4-49AE-A28C-93E04BD579DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BCA3E2C-3DA4-49AE-A28C-93E04BD579DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BCA3E2C-3DA4-49AE-A28C-93E04BD579DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F1D339EC-236F-4CF6-AD13-0AD5BAFD8D04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F1D339EC-236F-4CF6-AD13-0AD5BAFD8D04}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F1D339EC-236F-4CF6-AD13-0AD5BAFD8D04}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F1D339EC-236F-4CF6-AD13-0AD5BAFD8D04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

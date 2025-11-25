@@ -2,13 +2,12 @@
 using OPS.Data;
 using OPS.Data.Models;
 using OPS.Data.Repositories;
-using OPS.Shared;
 
 namespace OPS.Processor.Services;
 
 public interface IOrderProcessingService
 {
-    public Task ProcessOrderAsync(ProcessOrderRequestDto dto);
+    public Task ProcessOrderAsync(OrderDto dto);
 }
 
 public class OrderProcessingService(
@@ -21,7 +20,7 @@ public class OrderProcessingService(
 {
     private static long _processedOrdersCount = 0;
 
-    public async Task ProcessOrderAsync(ProcessOrderRequestDto dto)
+    public async Task ProcessOrderAsync(OrderDto dto)
     {
         try
         {

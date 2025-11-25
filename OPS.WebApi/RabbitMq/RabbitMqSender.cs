@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using OPS.Messages;
-using OPS.Shared;
+using OPS.WebApi.Dtos;
 using Endpoint = NServiceBus.Endpoint;
 
 namespace OPS.WebApi.RabbitMq;

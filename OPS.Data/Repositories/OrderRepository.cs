@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OPS.Data.Models;
-using OPS.Shared;
 
 namespace OPS.Data.Repositories;
 
 public interface IOrderRepository
 {
-    Task<Order> CreateNewOrder(ProcessOrderRequestDto dto);
+    Task<Order> CreateNewOrder(OrderDto dto);
 
     Task<Order?> GetById(Guid id);
 }
@@ -15,7 +14,7 @@ public interface IOrderRepository
 public class OrderRepository(AppDbContext dbContext, ILogger<OrderRepository> logger)
     : EfRepository<Order>(dbContext), IOrderRepository
 {
-    public async Task<Order> CreateNewOrder(ProcessOrderRequestDto dto)
+    public async Task<Order> CreateNewOrder(OrderDto dto)
     {
         logger.LogInformation("Creating new order for customer {customerId}", dto.CustomerId);
 

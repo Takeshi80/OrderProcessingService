@@ -1,7 +1,9 @@
+using Microsoft.EntityFrameworkCore;
 using OPS.Data;
+using OPS.Data.Models;
 using OPS.Data.Repositories;
-using OPS.Shared;
 using OPS.WebApi;
+using OPS.WebApi.Dtos;
 using OPS.WebApi.RabbitMq;
 using OPS.WebApi.Utils;
 
@@ -32,9 +34,42 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-app.MapPost("/order", async (ProcessOrderRequestDto data, IRabbitMqSender sender) =>
+app.MapPost("/order", async (ProcessOrderRequestDto data, IRabbitMqSender sender, AppDbContext db) =>
     {
+        var clientId = "web-api";
+        var key = data.IdempotencyKey;
+        var entry = new IdempotentRequest
+        {
+            Id = Guid.NewGuid(),
+            ClientId = clientId,
+            IdempotencyKey = data.IdempotencyKey,
+            CreatedAt = DateTime.UtcNow,
+        };
+
+        try
+        {
+            db.IdempotentRequests.Add(entry);
+            await db.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            var existing = await db.IdempotentRequests
+                .FirstOrDefaultAsync(x => x.ClientId == clientId && x.IdempotencyKey == key);
+
+            if (existing?.OrderId is not null)
+            {
+                return Results.Created($"/order", existing.OrderId);
+            }
+
+            return Results.StatusCode(StatusCodes.Status409Conflict);
+        }
+
         var orderId = await sender.Send(data);
+
+        // store order id for idempotency request
+        entry.OrderId = orderId;
+        await db.SaveChangesAsync();
+
         return Results.Created($"/order", orderId);
     })
     .WithName("SubmitOrder")
