@@ -6,7 +6,7 @@
       dockerfile: OPS.WebApi/Dockerfile
     environment:
       ConnectionStrings__RabbitMq: "host=rabbitmq;username=appuser;password=appsecret"
-      ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=order_processing_db;Username=appuser;Password=appsecret;"
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=order_processing_db;Username=appuser;Password=appsecret;"
     ports:
       - "8080:8080"
     depends_on:
@@ -22,7 +22,7 @@
       dockerfile: OPS.Processor/Dockerfile
     environment:
       ConnectionStrings__RabbitMq: "host=rabbitmq;username=appuser;password=appsecret"
-      ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=order_processing_db;Username=appuser;Password=appsecret;"
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=order_processing_db;Username=appuser;Password=appsecret;"
     ports:
       - "8082:8082"
     depends_on:

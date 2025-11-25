@@ -25,6 +25,8 @@ public static class DbInitializer
             ]);
         }
 
+        await context.SaveChangesAsync();
+        
         if (!context.Customers.Any())
         {
             context.Customers.AddRange(

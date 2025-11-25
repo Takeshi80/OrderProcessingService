@@ -7,9 +7,9 @@ public class Customer : IEntity
 {
     [Key] public int Id { get; set; }
 
-    public string FirstName { get; set; }
+    public string FirstName { get; set; } = null!;
 
-    public string LastName { get; set; }
+    public string LastName { get; set; } = null!;
 
     // History of orders
     public ICollection<Order> Orders { get; set; } = new List<Order>();
