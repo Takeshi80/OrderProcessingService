@@ -38,15 +38,24 @@ public class OrderProcessingService(
                 throw new Exception("One or more items not found");
             }
 
+            // TODO: first create order -> then apply inventory decrement and if anything mark order as failed
+
+            // Decrementing inventory
             await inventoryRepository.EnsureInventoryAsync(dto.Items);
 
+            // TODO: some other business logic
+
+            // Creating a new order
             await orderRepository.CreateNewOrder(dto);
+
+            // TODO: if everything is ok mark order as processed
 
             await ctx.CommitAsync();
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error processing order");
+            throw;
         }
     }
 }
