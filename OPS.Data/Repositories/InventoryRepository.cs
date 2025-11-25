@@ -7,9 +7,6 @@ namespace OPS.Data.Repositories;
 
 public interface IInventoryRepository
 {
-    Task<bool> DecrementInventoryAsync(int itemId, int amount);
-    Task<bool> IncrementInventoryAsync(int itemId, int amount);
-    Task<bool> CheckInventoryAsync(int itemId, int amount);
     Task EnsureInventoryAsync(List<ProcessOrderItemDto> orderItems);
 }
 
@@ -20,10 +17,8 @@ public class InventoryRepository(
 {
     public async Task EnsureInventoryAsync(List<ProcessOrderItemDto> orderItems)
     {
-        var itemIds = orderItems.Select(x => x.ItemId).ToList();
-        var inventoryRecords = DbContext.Inventories.Where(x => itemIds.Contains(x.ItemId))
-            .ToList();
-
+        await using var tx = await DbContext.Database.BeginTransactionAsync();
+        
         foreach (var item in orderItems)
         {
             var affected = await DbContext.Database.ExecuteSqlInterpolatedAsync($@"
@@ -35,44 +30,12 @@ public class InventoryRepository(
 
             if (affected == 0)
             {
-                throw new Exception($"Not enough items in inventory for item {item.ItemId}");
+                throw new NotEnoughInventoryException($"Not enough items in inventory for item {item.ItemId}");
             }
         }
 
-        await DbContext.SaveChangesAsync();
-    }
-
-    public async Task<bool> DecrementInventoryAsync(int itemId, int amount)
-    {
-        var inventoryRecord = await GetByIdAsync(itemId);
-
-        if (inventoryRecord == null)
-            throw new Exception("Inventory record not found");
-
-        inventoryRecord.AvailableAmount -= amount;
-        await DbContext.SaveChangesAsync();
-        return true;
-    }
-
-    public async Task<bool> IncrementInventoryAsync(int itemId, int amount)
-    {
-        var inventoryRecord = await GetByIdAsync(itemId);
-
-        if (inventoryRecord == null)
-            throw new Exception("Inventory record not found");
-
-        inventoryRecord.AvailableAmount += amount;
-        await UpdateAsync(inventoryRecord);
-        return true;
-    }
-
-    public async Task<bool> CheckInventoryAsync(int itemId, int amount)
-    {
-        var inventoryRecord = await GetByIdAsync(itemId);
-
-        if (inventoryRecord == null)
-            throw new Exception("Inventory record not found");
-
-        return inventoryRecord.AvailableAmount >= amount;
+        await tx.CommitAsync();
     }
 }
+
+public class NotEnoughInventoryException(string s) : Exception(s);

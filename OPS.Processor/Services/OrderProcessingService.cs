@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using OPS.Data;
+using OPS.Data.Models;
 using OPS.Data.Repositories;
 using OPS.Shared;
 
@@ -18,18 +19,20 @@ public class OrderProcessingService(
     IInventoryRepository inventoryRepository,
     AppDbContext dbContext) : IOrderProcessingService
 {
+    private static long _processedOrdersCount = 0;
+
     public async Task ProcessOrderAsync(ProcessOrderRequestDto dto)
     {
         try
         {
-            await using var ctx = await dbContext.Database.BeginTransactionAsync();
-
+            // Customer validation
             var customer = await customerRepository.GetById(dto.CustomerId);
             if (customer == null)
             {
                 throw new Exception("Customer not found");
             }
 
+            // items validation
             var itemIds = dto.Items.Select(x => x.ItemId).ToList();
             var itemExists = await itemRepository.DoesItemsExistAsync(itemIds);
 
@@ -38,24 +41,40 @@ public class OrderProcessingService(
                 throw new Exception("One or more items not found");
             }
 
-            // TODO: first create order -> then apply inventory decrement and if anything mark order as failed
+            // If validation pass -> we end up with order with status "CREATED"
+            var order = await orderRepository.CreateNewOrder(dto);
 
-            // Decrementing inventory
-            await inventoryRepository.EnsureInventoryAsync(dto.Items);
+            order.Status = OrderStatus.Processed;
+            try
+            {
+                // Decrementing inventory
+                await inventoryRepository.EnsureInventoryAsync(dto.Items);
+            }
+            catch (NotEnoughInventoryException ex)
+            {
+                logger.LogError(ex, "Not enough inventory for order {OrderId}", order.Id);
+                order.Status = OrderStatus.Failed;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Unexpected exception for order {OrderId}", order.Id);
+                order.Status = OrderStatus.Failed;
+            }
 
-            // TODO: some other business logic
+            // TODO: any other business logic
 
-            // Creating a new order
-            await orderRepository.CreateNewOrder(dto);
-
-            // TODO: if everything is ok mark order as processed
-
-            await ctx.CommitAsync();
+            await dbContext.SaveChangesAsync();
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error processing order");
             throw;
         }
+
+        var total = Interlocked.Increment(ref _processedOrdersCount);
+        logger.LogInformation(
+            "Processed order {OrderId}. Total processed orders in this instance: {TotalProcessed}",
+            dto.OrderId,
+            total);
     }
 }

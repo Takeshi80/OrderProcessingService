@@ -29,17 +29,16 @@ After this you should be good to go, please refer to [Swagger](http://localhost:
 ## Design decisions and tradeoffs
 
 1. Decided to use EF Core for data access layer
-2. NServiceBus for messaging for data consistency
+2. NServiceBus + RabbitMQ for messaging for data consistency
 3. We return GUID during order creation and then use it to get order details
-   if no order found means -> something went wrong, and we can refer to logs
-   to understand what exactly happened (not the best approach)
-4. We use Postgresql for local development
-5. We're failing whole order creation if any of the constraints are not met. 
-This can be expanded. For example, we can create an order with failed status, 
-without decreasing the inventory and figure out some approach of re-processing
-failed order
+   if no order found means that initial validation did not pass and we can refer to logs
+   to understand what exactly happened 
+4. We use Postgresql for as DB
+5. We're not failing order creation if the initial constraints pass (e.g. customer and items exists in db)
+but we will not touch the inventory if it is not fulfillable
 6. There is a retry mechanism for failed messages, but no implementation for DLQ that can be useful 
 in a production version of the app
+7. There's a log of total success message processed
 
 
 ## Assumptions that I've made during this work
@@ -48,7 +47,7 @@ in a production version of the app
 2. Sometimes there's a weird library dependency issue, which can be resolved
    via direct reference of the library which is implicitly referenced by other libraries
 3. Not sure EF-CodeFirst approach was good here, maybe spinning up DB via SQL scripts would be faster
-4. 
+4. EF handles transactions pretty cool 
 
 ### Dev notes (this is just for my copypaste purpose :)
 
