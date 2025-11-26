@@ -81,7 +81,13 @@ app.MapGet("/order/{orderId}", async (Guid orderId, IOrderRepository orderReposi
 
     return order == null
         ? Results.NotFound()
-        : Results.Ok(order);
+        : Results.Ok(OrderResponseDto.FromOrder(order));
 });
+
+app.MapGet("/items", async (IItemRepository repo) => Results.Ok(await repo.List()));
+
+app.MapGet("/customers", async (ICustomerRepository repo) => Results.Ok(await repo.List()));
+
+app.MapGet("/inventory", async (IInventoryRepository repo) => Results.Ok(await repo.List()));
 
 app.Run();

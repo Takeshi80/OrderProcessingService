@@ -28,7 +28,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<Order>()
             .Property(o => o.Id)
             .HasDefaultValueSql("gen_random_uuid()");
-        
+
         modelBuilder.Entity<Order>()
             .HasOne(o => o.Customer)
             .WithMany(c => c.Orders)
@@ -51,7 +51,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasOne(oi => oi.Item)
             .WithMany(i => i.OrderItems)
             .HasForeignKey(oi => oi.ItemId);
-        
+
         modelBuilder.Entity<IdempotentRequest>()
             .HasIndex(x => new { x.ClientId, x.IdempotencyKey })
             .IsUnique();

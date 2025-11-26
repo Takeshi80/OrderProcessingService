@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OPS.Data;
@@ -11,9 +12,11 @@ using OPS.Data;
 namespace OPS.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251126144913_additionaDbFields")]
+    partial class additionaDbFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,16 +127,6 @@ namespace OPS.Data.Migrations
 
                     b.Property<int?>("CustomerId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("FailureReason")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<decimal>("PriceWithDiscount")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("PriceWithoutDiscount")
-                        .HasColumnType("numeric");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");

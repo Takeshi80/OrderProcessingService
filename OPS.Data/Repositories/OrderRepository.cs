@@ -6,7 +6,7 @@ namespace OPS.Data.Repositories;
 
 public interface IOrderRepository
 {
-    Task<Order> CreateNewOrder(OrderDto dto);
+    Task<Order> CreateNewOrder(OrderDto dto, OrderStatus status);
 
     Task<Order?> GetById(Guid id);
 }
@@ -14,7 +14,7 @@ public interface IOrderRepository
 public class OrderRepository(AppDbContext dbContext, ILogger<OrderRepository> logger)
     : EfRepository<Order>(dbContext), IOrderRepository
 {
-    public async Task<Order> CreateNewOrder(OrderDto dto)
+    public async Task<Order> CreateNewOrder(OrderDto dto, OrderStatus status)
     {
         logger.LogInformation("Creating new order for customer {customerId}", dto.CustomerId);
 
@@ -22,17 +22,24 @@ public class OrderRepository(AppDbContext dbContext, ILogger<OrderRepository> lo
         {
             Id = dto.OrderId,
             CustomerId = dto.CustomerId,
-            Status = OrderStatus.Created,
-            TotalAmount = dto.TotalAmount
+            Status = status,
+            TotalAmount = dto.TotalAmount,
+            PriceWithoutDiscount = dto.PriceWithoutDiscount,
+            PriceWithDiscount = dto.PriceWithDiscount,
+            FailureReason = dto.FailureReason
         };
 
-        foreach (var oderItem in dto.Items.Select(item => new OrderItem
-                 {
-                     ItemId = item.ItemId,
-                     Quantity = item.Quantity
-                 }))
+        if (dto.Items.Any())
         {
-            order.OrderItems.Add(oderItem);
+            foreach (var oderItem in dto.Items.Select(item => new OrderItem
+                     {
+                         ItemId = item.ItemId,
+                         Quantity = item.Quantity,
+                         UnitPrice = item.UnitPrice
+                     }))
+            {
+                order.OrderItems.Add(oderItem);
+            }
         }
 
         return await AddAsync(order);
@@ -41,7 +48,8 @@ public class OrderRepository(AppDbContext dbContext, ILogger<OrderRepository> lo
     public async Task<Order?> GetById(Guid id)
     {
         return await DbContext.Set<Order>()
-            .Include(x => x.OrderItems)
+            .Include(x => x.Customer)
+            .Include(x => x.OrderItems).ThenInclude(x => x.Item)
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 }

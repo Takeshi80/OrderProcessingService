@@ -13,29 +13,29 @@ public static class DbInitializer
         {
             context.Items.AddRange(
             [
-                new Item() { Name = "Macarons" },
-                new Item() { Name = "Potato" },
-                new Item() { Name = "Garland" },
-                new Item() { Name = "Garland" },
-                new Item() { Name = "Chocolate" },
-                new Item() { Name = "Mix kit" },
-                new Item() { Name = "Mug" },
-                new Item() { Name = "Plant" },
-                new Item() { Name = "Cake" },
+                new Item { Name = "Macarons", UnitPrice = 105.32m },
+                new Item { Name = "Potato", UnitPrice = 100.21m },
+                new Item { Name = "Garland", UnitPrice = 107.82m },
+                new Item { Name = "Garland", UnitPrice = 92.13m },
+                new Item { Name = "Chocolate", UnitPrice = 33.74m },
+                new Item { Name = "Mix kit", UnitPrice = 14.52m },
+                new Item { Name = "Mug", UnitPrice = 123.99m },
+                new Item { Name = "Plant", UnitPrice = 22.23m },
+                new Item { Name = "Cake", UnitPrice = 11.37m },
             ]);
         }
 
         await context.SaveChangesAsync();
-        
+
         if (!context.Customers.Any())
         {
             context.Customers.AddRange(
             [
-                new Customer() { FirstName = "John", LastName = "Doe" },
-                new Customer() { FirstName = "Baron", LastName = "Megatron" },
-                new Customer() { FirstName = "James", LastName = "Collider" },
-                new Customer() { FirstName = "Petro", LastName = "Schur" },
-                new Customer() { FirstName = "Ivan", LastName = "Minigun" },
+                new Customer { FirstName = "John", LastName = "Doe" },
+                new Customer { FirstName = "Baron", LastName = "Megatron" },
+                new Customer { FirstName = "James", LastName = "Collider" },
+                new Customer { FirstName = "Petro", LastName = "Schur" },
+                new Customer { FirstName = "Ivan", LastName = "Minigun" },
             ]);
         }
 

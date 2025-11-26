@@ -3,13 +3,15 @@ using OPS.Data.Interface;
 
 namespace OPS.Data.Models;
 
-public class Item: IEntity
+public class Item : IEntity
 {
-    [Key]
-    public int Id { get; set; }
-    
-    public string Name { get; set; }
-    
+    [Key] public int Id { get; set; }
+
+    [MaxLength(256)]
+    public string Name { get; set; } = null!;
+
+    public decimal UnitPrice { get; set; }
+
     // Order items
     public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 }

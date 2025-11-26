@@ -7,6 +7,7 @@ namespace OPS.Data.Repositories;
 public interface IInventoryRepository
 {
     Task EnsureInventoryAsync(List<OrderItemDto> orderItems);
+    Task<IReadOnlyList<Inventory>> List();
 }
 
 public class InventoryRepository(
@@ -14,10 +15,15 @@ public class InventoryRepository(
     ILogger<InventoryRepository> logger)
     : EfRepository<Inventory>(dbContext), IInventoryRepository
 {
+    public async Task<IReadOnlyList<Inventory>> List()
+    {
+        return await ListAsync();
+    }
+
     public async Task EnsureInventoryAsync(List<OrderItemDto> orderItems)
     {
         await using var tx = await DbContext.Database.BeginTransactionAsync();
-        
+
         foreach (var item in orderItems)
         {
             var affected = await DbContext.Database.ExecuteSqlInterpolatedAsync($@"

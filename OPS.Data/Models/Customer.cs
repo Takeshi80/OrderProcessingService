@@ -7,8 +7,10 @@ public class Customer : IEntity
 {
     [Key] public int Id { get; set; }
 
+    [MaxLength(256)]
     public string FirstName { get; set; } = null!;
 
+    [MaxLength(256)]
     public string LastName { get; set; } = null!;
 
     // History of orders
