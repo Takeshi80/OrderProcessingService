@@ -67,6 +67,7 @@ Basically after order is created we can fire a few rabbitmq messages to make dis
 4. EF handles transactions pretty cool
 5. EF limits parallel execution on the same DB context (I was thinking to implement this for validation),
 there's a way to make it work, but require some additional work
+6. FailureReason on the Order can be expanded to include all failed reasons (not just the latest one)
 
 ### Dev notes (this is just for my copypaste purpose :)
 
